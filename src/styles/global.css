@@ -201,7 +201,15 @@
     background: var(--white);
     color: var(--text);
     padding: 0.85rem 1rem;
-    font-size: 15px;
+    /* 16px on touch widths: iOS Safari force-zooms the page when a focused
+       input is under 16px, which throws the layout sideways mid-typing. */
+    font-size: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .field {
+      font-size: 15px;
+    }
   }
 
   .field::placeholder {

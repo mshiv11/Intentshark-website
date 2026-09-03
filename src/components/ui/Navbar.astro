@@ -16,7 +16,7 @@ const cta = { href: withBase("/get-started"), label: "Get started" };
   <div class="shell flex h-16 items-center justify-between gap-6">
     <a
       href={withBase("/")}
-      class="flex items-center gap-2.5"
+      class="flex min-h-[44px] items-center gap-2.5"
       aria-label="Intent Shark home"
     >
       <Logo size={24} tone="light" />
@@ -37,13 +37,16 @@ const cta = { href: withBase("/get-started"), label: "Get started" };
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href={cta.href} class="btn btn-primary !py-2 !px-4 text-[14px]">
+      <a
+        href={cta.href}
+        class="btn btn-primary !py-2 !px-4 text-[14px] min-h-[44px] md:min-h-0"
+      >
         {cta.label}
       </a>
       <button
         id="nav-toggle"
         type="button"
-        class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border-soft text-ink"
+        class="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border-soft text-ink"
         aria-expanded="false"
         aria-controls="nav-panel"
         aria-label="Toggle navigation"
@@ -60,10 +63,14 @@ const cta = { href: withBase("/get-started"), label: "Get started" };
     class="hidden md:hidden border-t border-border-soft bg-paper"
     aria-label="Mobile"
   >
-    <div class="shell py-4 flex flex-col gap-3">
+    <div class="shell py-2 flex flex-col">
       {
         links.map((link) => (
-          <a href={link.href} class="text-[15px] text-muted hover:text-ink" data-nav-close>
+          <a
+            href={link.href}
+            class="flex min-h-[44px] items-center text-[15px] text-muted hover:text-ink"
+            data-nav-close
+          >
             {link.label}
           </a>
         ))
