@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "intent-shark",
+  // Worker name. This is also the *.workers.dev subdomain, so it stays
+  // hyphen-free to match the intentshark.com brand and the D1 / R2 names below.
+  "name": "intentshark",
   "compatibility_date": "2025-09-01",
   // The Astro Cloudflare adapter bundles Node built-ins (node:path, node:async_hooks)
   // into the server entrypoint, so nodejs_compat is required, not optional.
