@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# vercel (legacy adapter output)
+.vercel/
+
 # generated types
 .astro/
 
