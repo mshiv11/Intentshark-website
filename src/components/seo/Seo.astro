@@ -18,7 +18,13 @@ const {
   robots,
 } = Astro.props;
 
-const ogImage = image?.src || siteData.image.src;
+// og:image must be absolute for crawlers. siteData stores it root-relative
+// (`/og.png`) so it survives a domain change; resolve it against the configured
+// site origin, falling back to the current page URL.
+const ogImage = new URL(
+  image?.src || siteData.image.src,
+  Astro.site ?? url,
+).toString();
 const ogAlt = image?.alt || siteData.image.alt;
 
 const jsonLD = jsonLDGenerator({ url });

@@ -1,0 +1,47 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "intent-shark",
+  "compatibility_date": "2025-09-01",
+  // The Astro Cloudflare adapter bundles Node built-ins (node:path, node:async_hooks)
+  // into the server entrypoint, so nodejs_compat is required, not optional.
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Emitted by `npm run build` (@astrojs/cloudflare). `dist/` holds the
+  // prerendered HTML plus hashed assets; `dist/_worker.js/index.js` is the
+  // Worker that serves only the routes listed in dist/_routes.json (i.e. /api/*).
+  "main": "./dist/_worker.js/index.js",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Lead capture. Schema lives in migrations/0001_create_leads.sql.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "intentshark",
+      "database_id": "2cda3792-1f4d-47d9-b9cd-eb707aa160bb"
+    }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "ASSETS_BUCKET",
+      "bucket_name": "intentshark-assets"
+    }
+  ],
+
+  // The adapter wires Astro's session storage to a KV binding named SESSION.
+  // Nothing uses sessions today, but the binding must exist or any future
+  // session read fails at runtime with "Invalid binding `SESSION`".
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "645d14f20a8942d181dbdfcf675c95c3"
+    }
+  ]
+}

@@ -19,6 +19,9 @@ const homeUrl = withBase("/");
 const paths = [
   {
     id: "engagement",
+    // `intent` is what /api/lead stores; it must be one of the two values the
+    // endpoint accepts. `value` is the human wording used in the email fallback.
+    intent: "engagement",
     value: "Full service engagement (90 days)",
     title: "Book a full service engagement",
     body: "The 90-day programme. Two client-owned subreddits, three disclosed accounts, roughly 48 comments a month, fortnightly reporting. Month to month after the first 90 days.",
@@ -26,6 +29,7 @@ const paths = [
   },
   {
     id: "call",
+    intent: "consultation",
     value: "Intro consultation call",
     title: "Book a consultation call",
     body: "A short intro call. We look at what is already being said about you, tell you which rooms allow a vendor to speak, and say plainly whether this is worth doing for your category.",
@@ -78,6 +82,7 @@ const paths = [
                   name="path"
                   id={`path-${path.id}`}
                   value={path.value}
+                  data-intent={path.intent}
                   checked={index === 0}
                 />
                 <span class="flex items-center justify-between gap-3">
@@ -172,12 +177,12 @@ const paths = [
         </div>
 
         <div class="mt-8 flex flex-wrap items-center gap-4">
-          <button type="submit" class="btn btn-primary">
-            Open the email draft
+          <button id="start-submit" type="submit" class="btn btn-primary">
+            Send my details
           </button>
           <p class="eyebrow max-w-sm">
-            This site has no backend. Submitting opens a prefilled email in your
-            mail app. Nothing is stored here.
+            We store your email and what you picked, nothing else. If sending
+            fails we fall back to opening a prefilled email in your mail app.
           </p>
         </div>
       </div>
@@ -190,20 +195,22 @@ const paths = [
       role="status"
       aria-live="polite"
     >
-      <p class="eyebrow">Draft opened</p>
-      <h2 class="display-3 mt-3 text-ink">
-        Your mail app should be showing a draft to {INBOX}.
+      <!-- Filled in by the submit handler: one wording when the lead reached
+           our server, another when we fell back to the mail app. -->
+      <p id="start-done-eyebrow" class="eyebrow">Sent</p>
+      <h2 id="start-done-title" class="display-3 mt-3 text-ink">
+        We have your details.
       </h2>
-      <p class="mt-4 text-[16px] text-muted">
-        We did not send anything and we did not store anything. Press send in
-        your mail app and it reaches us. If no draft appeared, your browser
-        blocked the handoff. Copy the text below into an email instead.
+      <p id="start-done-body" class="mt-4 text-[16px] text-muted">
+        Nothing else to do. We will reply to the address you gave us.
       </p>
 
       <div class="mt-6 border-t border-border-soft pt-6">
         <p class="eyebrow">To</p>
         <p class="mt-1 text-[15px] text-ink">{INBOX}</p>
-        <p class="eyebrow mt-5">Message</p>
+        <p id="start-summary-label" class="eyebrow mt-5">
+          What we have
+        </p>
         <pre
           id="start-summary"
           class="mt-2 whitespace-pre-wrap rounded-lg border border-border-soft bg-paper p-4 font-mono text-[13px] text-text"></pre>
@@ -308,6 +315,11 @@ const paths = [
     var echoValue = document.getElementById("site-echo-value");
     var copyBtn = document.getElementById("start-copy");
     var againBtn = document.getElementById("start-again");
+    var submitBtn = document.getElementById("start-submit");
+    var doneEyebrow = document.getElementById("start-done-eyebrow");
+    var doneTitle = document.getElementById("start-done-title");
+    var doneBody = document.getElementById("start-done-body");
+    var summaryLabel = document.getElementById("start-summary-label");
 
     if (!form) return;
 
@@ -346,9 +358,23 @@ const paths = [
 
     /* ------------------------------- compose */
 
+    function selectedInput() {
+      return form.querySelector('input[name="path"]:checked');
+    }
+
     function selectedPath() {
-      var checked = form.querySelector('input[name="path"]:checked');
+      var checked = selectedInput();
       return checked ? checked.value : "Not selected";
+    }
+
+    /* The value /api/lead validates against. Defaults to the lighter step if
+       somehow nothing is checked, so a stray click still records something. */
+    function selectedIntent() {
+      var checked = selectedInput();
+      var intent = checked ? checked.getAttribute("data-intent") : null;
+      return intent === "engagement" || intent === "consultation"
+        ? intent
+        : "consultation";
     }
 
     function compose() {
@@ -369,6 +395,56 @@ const paths = [
       };
     }
 
+    /* ------------------------------- outcomes */
+
+    /* The lead reached our server. No mail app involved. */
+    function showStored() {
+      doneEyebrow.textContent = "Sent";
+      doneTitle.textContent = "We have your details.";
+      doneBody.textContent =
+        "Nothing else to do. We will reply to the address you gave us, " +
+        "usually within a working day.";
+      summaryLabel.textContent = "What we have";
+      reveal();
+    }
+
+    /* Server unreachable, rejected us, or this is a static build with no
+       Worker behind it. Hand off to the mail app so the lead is not lost. */
+    function showMailFallback(composed) {
+      doneEyebrow.textContent = "Draft opened";
+      doneTitle.textContent =
+        "Your mail app should be showing a draft to " + IS_INBOX + ".";
+      doneBody.textContent =
+        "We could not reach our server, so nothing was stored. Press send in " +
+        "your mail app and it reaches us. If no draft appeared, your browser " +
+        "blocked the handoff. Copy the text below into an email instead.";
+      summaryLabel.textContent = "Message";
+      reveal();
+
+      try {
+        window.location.href =
+          "mailto:" +
+          IS_INBOX +
+          "?subject=" +
+          encodeURIComponent(composed.subject) +
+          "&body=" +
+          encodeURIComponent(composed.body);
+      } catch (e) {
+        /* nothing to do, the copyable panel is already visible */
+      }
+    }
+
+    function reveal() {
+      doneEl.classList.remove("hidden");
+      doneEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function setBusy(busy) {
+      if (!submitBtn) return;
+      submitBtn.disabled = busy;
+      submitBtn.textContent = busy ? "Sending..." : "Send my details";
+    }
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       clearEmailError();
@@ -387,24 +463,50 @@ const paths = [
       summaryEl.textContent =
         "Subject: " + composed.subject + "\n\n" + composed.body;
 
-      doneEl.classList.remove("hidden");
+      setBusy(true);
 
-      // Try the mail handoff. If the browser blocks it, the panel above
-      // already shows everything needed to send it by hand.
+      // Try the real endpoint first. Anything at all going wrong -- offline,
+      // 4xx, 5xx, no Worker in front of a static build -- falls through to the
+      // mailto handoff so a lead is never silently dropped.
+      var request;
       try {
-        var href =
-          "mailto:" +
-          IS_INBOX +
-          "?subject=" +
-          encodeURIComponent(composed.subject) +
-          "&body=" +
-          encodeURIComponent(composed.body);
-        window.location.href = href;
+        request = window.fetch("/api/lead", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            email: email,
+            site: siteEl.value.trim(),
+            name: nameEl.value.trim(),
+            company: companyEl.value.trim(),
+            intent: selectedIntent(),
+          }),
+        });
       } catch (e) {
-        /* nothing to do, the fallback panel is already visible */
+        request = null;
       }
 
-      doneEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!request || typeof request.then !== "function") {
+        setBusy(false);
+        showMailFallback(composed);
+        return;
+      }
+
+      request
+        .then(function (response) {
+          if (!response.ok) throw new Error("http " + response.status);
+          return response.json().catch(function () {
+            return null;
+          });
+        })
+        .then(function (data) {
+          if (!data || data.ok !== true) throw new Error("unexpected body");
+          setBusy(false);
+          showStored();
+        })
+        .catch(function () {
+          setBusy(false);
+          showMailFallback(composed);
+        });
     });
 
     /* ------------------------------- confirmation controls */

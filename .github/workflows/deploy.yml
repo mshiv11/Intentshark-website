@@ -1,34 +1,35 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Workers
+
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#
+#   CLOUDFLARE_API_TOKEN   an API token with the "Edit Cloudflare Workers"
+#                          template, plus D1 Edit and Workers R2 Storage Edit
+#                          so the DB / bucket bindings resolve at deploy time.
+#   CLOUDFLARE_ACCOUNT_ID  the account ID from the Cloudflare dashboard sidebar.
+#
+# Neither is needed to build; only the deploy step reads them.
 
 on:
   push:
     branches:
-      - claude/slack-session-o8fbyq
+      - main
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow one concurrent deployment; queued runs are not cancelled mid-deploy.
+# One deploy at a time; queued runs wait rather than cancelling a live rollout.
 concurrency:
-  group: pages
+  group: cloudflare-deploy
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build
+  deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          # Turn GitHub Pages on automatically if it is not already enabled.
-          enablement: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -42,19 +43,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: ./dist
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # wrangler.jsonc supplies name, main, assets and every binding.
+          command: deploy

@@ -3,7 +3,7 @@
   "siteName": "Intent Shark",
   "description": "Reddit and AI-search visibility for B2B software brands. Build the ground you own, speak only where you are allowed, and correct facts where you are not.",
   "image": {
-    "src": "https://mshiv11.github.io/astro-agency-template/og.png",
+    "src": "/og.png",
     "alt": "Intent Shark dorsal fin mark on a dark green background"
   }
 }

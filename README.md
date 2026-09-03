@@ -48,13 +48,16 @@ Only add subreddits you are certain exist.
 
 ## Base path
 
-The site is served from a subpath (`/astro-agency-template/`). Astro rewrites
-imported assets and bundled CSS or JS, but it does **not** rewrite hand-written
-`href` or `src` values.
+The site is served from the root of its domain on Cloudflare, so `base` is
+unset and `withBase()` in `src/utils/url.ts` is a pass-through.
 
-Every internal link and every `public/` reference must go through
-`withBase()` in `src/utils/url.ts`. A root-absolute path like `href="/about"`
-will 404 in production even though it works in `astro dev`.
+Internal links still go through `withBase()`. It is the one place to change if
+the site is ever mounted on a subpath again.
+
+## Deploying
+
+See [DEPLOY.md](./DEPLOY.md) for Cloudflare deployment, the D1 migrations, and
+the two GitHub Actions secrets.
 
 ## Values to swap before launch
 
