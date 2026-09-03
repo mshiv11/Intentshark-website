@@ -1,9 +1,30 @@
 ---
-const { id } = Astro.props;
+interface Props {
+  id?: string;
+  /** `paper` is the light editorial base. `ink` is a full-bleed dark band. */
+  tone?: "paper" | "ink";
+  /** Draw a hairline divider on the top edge. */
+  divider?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  tone = "paper",
+  divider = false,
+  class: className = "",
+} = Astro.props;
+
+const toneClass = tone === "ink" ? "bg-ink text-white" : "bg-paper text-text";
+const dividerClass = divider
+  ? tone === "ink"
+    ? "border-t border-linedk"
+    : "border-t border-border-soft"
+  : "";
 ---
 
-<section id={id} class="px-5 flex justify-center overflow-hidden lg:block">
-  <div class="w-full max-w-[1280px] mx-auto">
+<section id={id} class={`${toneClass} ${dividerClass} ${className}`}>
+  <div class="shell section-y">
     <slot />
   </div>
 </section>

@@ -1,54 +1,73 @@
-# Positivus - Digital Marketing Agency Landing Page
+# Intent Shark
 
-Introducing "Positivus" - a stunning and versatile Astro theme designed for digital marketing agencies.
+Marketing site for Intent Shark, a Reddit and AI-search (AEO) visibility programme
+for B2B software brands.
 
-Built with clean, modern aesthetics and leveraging the power of Astro and Tailwind, Positivus empowers you to craft a captivating website that showcases your agency's expertise and fosters trust with potential clients.
+Built with Astro 5 and Tailwind CSS 3. Static output, deployed to GitHub Pages.
 
-[![Static Badge](https://img.shields.io/badge/UI%2FUX-Olga-blue)](https://www.figma.com/@olgaaverchenko) [![View Demo](https://img.shields.io/badge/Develop-Manul_Thanura-red)](https://lk.linkedin.com/in/manulthanura)
-[![Static Badge](https://img.shields.io/badge/View_Demo-green)](https://positivustheme.vercel.app)
-[![Static Badge](https://img.shields.io/badge/Astro-orange)](https://astro.build/)
+## Run it
 
-![Cover](./public/cover.png)
+```bash
+npm install
+npm run dev      # local dev server
+npm run build    # astro check + astro build
+npm run preview  # serve dist/
+```
 
-## Theme Features
+## Pages
 
-Leveraging the power of Astro and Tailwind CSS, Positivus offers:
+| Route          | File                          | What it does                                                            |
+| -------------- | ----------------------------- | ----------------------------------------------------------------------- |
+| `/`            | `src/pages/index.astro`       | Hero, the scanner, how it works, why Reddit, the limits, final CTA.     |
+| `/get-started` | `src/pages/get-started.astro` | Reads `?site=`, picks a path, composes a prefilled `mailto:`.           |
+| `/404`         | `src/pages/404.astro`         | Not found.                                                              |
 
-- Clean and modern design.
-- SEO-friendly.
-- Multiple Layouts.
-- Seamless Navigation.
-- Pre-built Sections.
-- Customizable Components.
-- Mobile-Responsiveness.
+## The scanner
 
-## 🚀 Project Structure
+Entirely client side. It takes a domain and an optional description, matches
+them against the topic clusters in `src/data/redditTargets.json`, and builds
+**live Reddit search deep links**.
 
-The project is built using Astro.js and Tailwind CSS. Here's a quick look at the project structure:
+Nothing is crawled, cached, scored, or stored. Every link the scanner produces
+runs as a fresh search on reddit.com the moment it is clicked. Keep it that way:
+the copy on the page promises exactly this and nothing more.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+To widen coverage, add a topic to `src/data/redditTargets.json`:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```json
+{
+  "id": "cold-email",
+  "label": "Cold email and outbound",
+  "keywords": ["cold email", "outbound", "deliverability"],
+  "subreddits": ["SaaS", "sales"],
+  "queries": ["cold email tool", "best outbound software"]
+}
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+Only add subreddits you are certain exist.
 
-## 🧞 Commands
+## Base path
 
-All commands are run from the root of the project, from a terminal:
+The site is served from a subpath (`/astro-agency-template/`). Astro rewrites
+imported assets and bundled CSS or JS, but it does **not** rewrite hand-written
+`href` or `src` values.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Every internal link and every `public/` reference must go through
+`withBase()` in `src/utils/url.ts`. A root-absolute path like `href="/about"`
+will 404 in production even though it works in `astro dev`.
 
-## 👀 Want to learn more?
+## Values to swap before launch
 
-Feel free to check [Astro documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+`src/pages/get-started.astro` has a commented constants block at the top:
 
-## 📄 License
+- `INBOX` the address enquiries are addressed to.
+- `BOOKING_URL` a Cal.com or Calendly link. Empty string hides the button.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+## Design system
+
+Tokens live in `src/styles/global.css` (`:root`) and are wired into
+`tailwind.config.mjs` under `theme.extend.colors`.
+
+- Light editorial base on PAPER, punctuated by full-bleed INK sections.
+- Headings in Platypi, body in a Calibri system stack, monospace eyebrow labels.
+- Hairline borders. No drop shadows, no glows, no gradients.

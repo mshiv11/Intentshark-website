@@ -1,10 +1,31 @@
 ---
-const { sectionTitle, description } = Astro.props;
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  tone?: "paper" | "ink";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  tone = "paper",
+  class: className = "",
+} = Astro.props;
+
+const dark = tone === "ink";
 ---
 
-<div class="flex flex-col items-center gap-10 mb-20 sm:flex-row">
-  <h2 class="greenhead text-center sm:text-left text-3xl sm:text-4xl">{sectionTitle}</h2>
-  <p class="w-auto text-center sm:text-left sm:w-[580px]">
-    {description}
-  </p>
+<div class={`max-w-3xl ${className}`}>
+  {eyebrow && <p class={`eyebrow ${dark ? "eyebrow-dark" : ""}`}>{eyebrow}</p>}
+  <h2 class={`display-2 mt-4 ${dark ? "text-white" : "text-ink"}`}>{title}</h2>
+  {
+    description && (
+      <p class={`mt-5 text-[17px] ${dark ? "text-mint/80" : "text-muted"}`}>
+        {description}
+      </p>
+    )
+  }
 </div>

@@ -1,125 +1,64 @@
 ---
-import { Image } from "astro:assets";
-import Facebook from "../../assets/facebook.svg";
-import Linkedin from "../../assets/linkedin.svg";
-import Logo from "../../assets/logo-alt.svg";
-import Twitter from "../../assets/twitter.svg";
-import ShortForm from "../ui/ShortForm.astro";
+import Logo from "./Logo.astro";
+import { withBase } from "../../utils/url";
 
-const logos = [
-  { name: "Facebook", src: Facebook, link: "https://facebook.com" },
-  { name: "Linkedin", src: Linkedin, link: "https://linkedin.com" },
-  { name: "Twitter", src: Twitter, link: "https://twitter.com" },
-];
+const year = new Date().getFullYear();
 
 const links = [
-  { name: "About us", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Use Cases", href: "#cases" },
-  { name: "Pricing", href: "#Testimonials" },
-  { name: "Blog", href: "#Home" },
+  { href: withBase("/#scanner"), label: "Scanner" },
+  { href: withBase("/#how-it-works"), label: "How it works" },
+  { href: withBase("/#why-reddit"), label: "Why Reddit" },
+  { href: withBase("/#limits"), label: "What we do not promise" },
+  { href: withBase("/get-started"), label: "Get started" },
 ];
 ---
 
-<section class="sm:px-5">
-  <div class="w-full max-w-[1240px] mx-auto">
-    <div
-      class="px-[15px] bg-dark text-gray py-[55px] lg:px-[60px] sm:rounded-t-[45px]"
-    >
-      <div>
-        <div
-          class="flex flex-col lg:flex-row gap-7 items-center justify-between"
+<footer class="bg-ink text-white border-t border-linedk">
+  <div class="shell py-16">
+    <div class="flex flex-col gap-12 md:flex-row md:justify-between">
+      <div class="max-w-sm">
+        <a
+          href={withBase("/")}
+          class="flex items-center gap-2.5"
+          aria-label="Intent Shark home"
         >
-          <picture>
-            <a href="#home">
-              <Image src={Logo} alt="Logo for Kreatif Brand" />
-            </a>
-          </picture>
-          <ul class="flex flex-col sm:flex-row gap-5">
-            {
-              links.map((link) => {
-                return (
-                  <li class="text-center">
-                    <a class="underline" href={link.href}>
-                      {link.name}
-                    </a>
-                  </li>
-                );
-              })
-            }
-          </ul>
-          <ul class="flex gap-5">
-            {
-              logos.map((logo) => {
-                return (
-                  <li>
-                    <a href={logo.link} target="_blank">
-                      <picture>
-                        <Image src={logo.src} alt={logo.name} />
-                      </picture>
-                    </a>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </div>
-
-        <div class="flex flex-col lg:flex-row mt-[66px] mb-[51px]">
-          <div
-            class="flex text-center lg:text-start flex-col w-full lg:w-[30%]"
-          >
-            <h3 class="mb-5 text-center md:text-left text-2xl text-green">Contact us</h3>
-            <div class="flex flex-col justify-between gap-4">
-              <span> Email: examplemail.com </span>
-              <span> Phone: +123 456 789 </span>
-              <span class="lg:w-3/4">
-                Address: 1234 Street Name, City Name, Country Name
-              </span>
-            </div>
-          </div>
-          <div class="flex-grow my-10 lg:my-0 lg:ml-12">
-            <ShortForm />
-          </div>
-        </div>
+          <Logo size={24} tone="dark" />
+          <span class="font-display text-[19px] text-white">Intent Shark</span>
+        </a>
+        <p class="mt-5 text-[15px] text-mint/70">
+          Reddit and AI-search visibility for B2B software brands. We build the
+          ground you own. We speak only where we are allowed.
+        </p>
+        <p class="mt-5 eyebrow eyebrow-dark">
+          If we cannot say who we work for in a room, we do not talk about the
+          client in it.
+        </p>
       </div>
 
-      <div class="h-[1px] bg-gray mb-5"></div>
-      <div
-        class="flex flex-col lg:flex-row h-20 justify-center mt-4 text-center md:justify-between md:mt-0"
-      >
-        <span
-          >2024 Positivus - Made With <a
-            class="underline"
-            target="_blank"
-            href="https://astro.build">Astro</a
-          > by 
-          <a 
-          class="underline"
-          target="_blank"
-          href="https://manulthanura.com">Manul</a
-          ></span
-        >&nbsp
-        <span>
-          Credits (
-          <a
-            href="https://www.olgaskuja.design/"
-            target="_blank"
-            class="underline">Olga</a
-          >,
-          <a
-            href="https://esteban-vasquez.netlify.app/"
-            target="_blank"
-            class="underline">Esteban</a
-          >)
-          <span> &</span>
-          <a
-            class="underline"
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank">Licence</a
-          >
-        </span>
-      </div>
+      <nav aria-label="Footer">
+        <p class="eyebrow eyebrow-dark">Pages</p>
+        <ul class="mt-4 flex flex-col gap-3">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-[15px] text-white/80 hover:text-mint transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      class="mt-14 border-t border-linedk pt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="eyebrow eyebrow-dark">&copy; {year} Intent Shark</p>
+      <p class="eyebrow eyebrow-dark">Month to month. You keep what we build.</p>
     </div>
   </div>
-</section>
+</footer>

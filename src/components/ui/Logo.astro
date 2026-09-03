@@ -1,0 +1,32 @@
+---
+/**
+ * Intent Shark dorsal fin mark.
+ *
+ * Convex leading edge, concave trailing edge. Aspect ratio h = w * 0.85.
+ * Apex sits at x 0.68 so the fin rakes backwards like a real dorsal.
+ */
+interface Props {
+  /** Rendered width in px. Height follows at 0.85x. */
+  size?: number;
+  /** `light` = green fin for paper backgrounds. `dark` = mint fin for ink. */
+  tone?: "light" | "dark";
+  class?: string;
+}
+
+const { size = 28, tone = "light", class: className = "" } = Astro.props;
+
+const fill = tone === "dark" ? "var(--mint)" : "var(--green)";
+---
+
+<svg
+  width={size}
+  height={Math.round(size * 0.85)}
+  viewBox="0 0 100 85"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  focusable="false"
+  class={className}
+>
+  <path d="M0 85 Q16 30 68 0 Q70 53 100 85 Z" fill={fill}></path>
+</svg>

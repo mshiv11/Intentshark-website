@@ -1,0 +1,244 @@
+{
+  "note": "Topic clusters used to build live Reddit search deep links. No thread data is stored here. Nothing is crawled or cached. Every link the scanner produces runs as a fresh search on reddit.com at the moment it is clicked.",
+  "topics": [
+    {
+      "id": "cold-email",
+      "label": "Cold email and outbound",
+      "keywords": [
+        "cold email",
+        "outbound",
+        "deliverability",
+        "sdr",
+        "sales engagement",
+        "prospecting",
+        "lead gen",
+        "leads",
+        "mail",
+        "email",
+        "sequence",
+        "inbox"
+      ],
+      "subreddits": ["SaaS", "sales", "Entrepreneur", "marketing"],
+      "queries": [
+        "cold email tool",
+        "best outbound software",
+        "email deliverability help"
+      ]
+    },
+    {
+      "id": "crm",
+      "label": "CRM and sales pipeline",
+      "keywords": [
+        "crm",
+        "pipeline",
+        "deals",
+        "contacts",
+        "sales",
+        "salesforce",
+        "hubspot",
+        "customer records",
+        "account management"
+      ],
+      "subreddits": ["sales", "smallbusiness", "SaaS", "Entrepreneur"],
+      "queries": [
+        "which CRM should I use",
+        "CRM for small team",
+        "moving off our CRM"
+      ]
+    },
+    {
+      "id": "project-management",
+      "label": "Project and work management",
+      "keywords": [
+        "project management",
+        "tasks",
+        "kanban",
+        "sprint",
+        "roadmap",
+        "jira",
+        "asana",
+        "planning",
+        "workflow",
+        "collaboration",
+        "productivity"
+      ],
+      "subreddits": ["ProductManagement", "smallbusiness", "SaaS", "startups"],
+      "queries": [
+        "project management tool recommendation",
+        "alternative to Jira",
+        "how do you track work across teams"
+      ]
+    },
+    {
+      "id": "seo-content",
+      "label": "SEO, content and paid search",
+      "keywords": [
+        "seo",
+        "content",
+        "backlink",
+        "keyword",
+        "rank",
+        "serp",
+        "blog",
+        "copywriting",
+        "ppc",
+        "ads",
+        "adwords",
+        "search"
+      ],
+      "subreddits": ["SEO", "PPC", "marketing", "Entrepreneur"],
+      "queries": [
+        "best SEO tool for a small budget",
+        "content workflow that actually works",
+        "is anyone getting traffic from AI answers"
+      ]
+    },
+    {
+      "id": "ai-tools",
+      "label": "AI tooling and LLM products",
+      "keywords": [
+        "ai",
+        "llm",
+        "gpt",
+        "model",
+        "agent",
+        "chatbot",
+        "prompt",
+        "machine learning",
+        "automation",
+        "copilot",
+        "rag",
+        "vector"
+      ],
+      "subreddits": ["SaaS", "startups", "webdev", "ExperiencedDevs"],
+      "queries": [
+        "which AI tool are you actually paying for",
+        "AI agent in production",
+        "LLM cost is getting out of hand"
+      ]
+    },
+    {
+      "id": "analytics",
+      "label": "Analytics and data",
+      "keywords": [
+        "analytics",
+        "dashboard",
+        "metrics",
+        "data",
+        "reporting",
+        "warehouse",
+        "bi",
+        "tracking",
+        "events",
+        "attribution",
+        "sql"
+      ],
+      "subreddits": ["analytics", "SaaS", "marketing", "startups"],
+      "queries": [
+        "product analytics tool comparison",
+        "self hosted analytics",
+        "attribution is broken, what do you use"
+      ]
+    },
+    {
+      "id": "hr-hiring",
+      "label": "HR, hiring and people ops",
+      "keywords": [
+        "hr",
+        "hiring",
+        "recruiting",
+        "ats",
+        "payroll",
+        "onboarding",
+        "people ops",
+        "candidates",
+        "interview",
+        "benefits",
+        "employee"
+      ],
+      "subreddits": ["humanresources", "recruiting", "smallbusiness", "startups"],
+      "queries": [
+        "ATS recommendation",
+        "payroll software for a small company",
+        "onboarding tools you actually like"
+      ]
+    },
+    {
+      "id": "customer-support",
+      "label": "Customer support and success",
+      "keywords": [
+        "support",
+        "helpdesk",
+        "ticket",
+        "customer success",
+        "churn",
+        "onboarding",
+        "live chat",
+        "knowledge base",
+        "service desk",
+        "csat"
+      ],
+      "subreddits": ["CustomerSuccess", "SaaS", "smallbusiness", "msp"],
+      "queries": [
+        "helpdesk software recommendation",
+        "reducing churn with better onboarding",
+        "live chat tool worth the money"
+      ]
+    },
+    {
+      "id": "accounting-finance",
+      "label": "Accounting, billing and finance",
+      "keywords": [
+        "accounting",
+        "invoice",
+        "billing",
+        "payments",
+        "subscription",
+        "revenue",
+        "bookkeeping",
+        "tax",
+        "expenses",
+        "payment",
+        "checkout",
+        "finance",
+        "pay",
+        "stripe"
+      ],
+      "subreddits": ["accounting", "smallbusiness", "SaaS", "Entrepreneur"],
+      "queries": [
+        "billing and subscription tool",
+        "payment processor fees comparison",
+        "invoicing software that does not annoy clients"
+      ]
+    },
+    {
+      "id": "devtools",
+      "label": "Developer tooling and infrastructure",
+      "keywords": [
+        "developer",
+        "api",
+        "sdk",
+        "devops",
+        "ci",
+        "deploy",
+        "hosting",
+        "kubernetes",
+        "monitoring",
+        "observability",
+        "logs",
+        "database",
+        "cloud",
+        "infra",
+        "sysadmin",
+        "code",
+        "dev"
+      ],
+      "subreddits": ["webdev", "devops", "sysadmin", "ExperiencedDevs"],
+      "queries": [
+        "developer tool worth paying for",
+        "monitoring stack recommendation",
+        "deploying without a platform team"
+      ]
+    }
+  ]
+}

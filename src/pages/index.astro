@@ -1,27 +1,714 @@
 ---
-import Cases from "../components/sections/Cases.astro";
-import Contact from "../components/sections/Contact.astro";
-import Hero from "../components/sections/Hero.astro";
-import Process from "../components/sections/Process.astro";
-import Proposal from "../components/sections/Proposal.astro";
-import Services from "../components/sections/Services.astro";
-import Sponsors from "../components/sections/Sponsors.astro";
-import Team from "../components/sections/Team.astro";
-import Testimonials from "../components/sections/Testimonials.astro";
 import MainLayout from "../layouts/MainLayout.astro";
+import Section from "../components/sections/Section.astro";
+import SectionTitle from "../components/ui/SectionTitle.astro";
+import Logo from "../components/ui/Logo.astro";
+import redditTargets from "../data/redditTargets.json";
+import siteData from "../data/siteData.json";
+import { withBase } from "../utils/url";
+
+const getStartedUrl = withBase("/get-started");
+
+const rooms = [
+  {
+    eyebrow: "Room one",
+    title: "Say your name",
+    body: "Some communities allow vendors to answer if they disclose. Here we reply under a labelled brand account and say who we are in the comment itself.",
+  },
+  {
+    eyebrow: "Room two",
+    title: "Correct only",
+    body: "Some communities allow a factual correction but not a pitch. Here we fix wrong pricing, wrong limits, wrong feature claims. Nothing else.",
+  },
+  {
+    eyebrow: "Room three",
+    title: "Stay quiet",
+    body: "Some communities forbid vendors outright. We do not post there. We do not use an unlabelled account to get around the rule.",
+  },
+];
+
+const owned = [
+  {
+    eyebrow: "Owned ground",
+    title: "The community sub",
+    body: "A subreddit your brand runs, for the people who use the product. Questions, releases, workarounds, complaints. You moderate it. You keep it.",
+  },
+  {
+    eyebrow: "Owned ground",
+    title: "The citation sub",
+    body: "A second subreddit built as a clean, factual record. Specs, limits, pricing, comparisons written straight. Made to be quoted correctly by an answer engine.",
+  },
+];
+
+const mechanics = [
+  { k: "Accounts", v: "Three. A client-owned brand account, a disclosed brand affiliate, and an aged disclosed operator account." },
+  { k: "Subreddits", v: "Two, both client-owned. One community sub, one citation sub." },
+  { k: "Comment volume", v: "Roughly 48 comments a month across the three accounts. Under four per account per week." },
+  { k: "Reporting", v: "Fortnightly. What was posted, where, and what happened to it." },
+  { k: "Engagement", v: "90 days, in three phases. Month to month after that." },
+];
+
+const notPromised = [
+  {
+    title: "We do not promise placement",
+    body: "No one can guarantee a comment survives a moderator, a downvote brigade, or an automod rule. We can promise the work, not the reception.",
+  },
+  {
+    title: "We do not promise a revenue number",
+    body: "We will not model your pipeline from a comment count. If someone shows you that spreadsheet, ask them how they built it.",
+  },
+  {
+    title: "We do not promise an AI engine will cite you",
+    body: "Answer engines change what they read and how they weight it. We build the clean, quotable record. We do not control the retrieval.",
+  },
+  {
+    title: "We do not post where vendors are banned",
+    body: "If we cannot say who we work for in a room, we do not talk about the client in it. That rule costs us reach. We keep it anyway.",
+  },
+  {
+    title: "We do not hide the accounts",
+    body: "Every account we run for you is disclosed. You get the logins for the two subreddits and the brand account. They are yours at the end.",
+  },
+];
 ---
 
 <MainLayout
-  title="Positivus"
-  description="A beautiful and functional landing page design created specifically for digital marketing agencies. With its clean and modern design, Positivus is the perfect template to showcase your agency's services and case studies to potential clients. Built with astro and tailwindcss"
+  title="Intent Shark | Reddit and AI-search visibility for B2B software"
+  description={siteData.description}
 >
-  <Hero />
-  <Sponsors />
-  <Services />
-  <Proposal />
-  <Cases />
-  <Process />
-  <Team />
-  <Testimonials />
-  <Contact />
+  <!-- ============================================ HERO -->
+  <section class="bg-ink text-white">
+    <div class="shell pt-20 pb-24 md:pt-28 md:pb-32">
+      <p class="eyebrow eyebrow-dark">Reddit + AI search visibility</p>
+
+      <h1 class="display-1 mt-6 max-w-4xl text-white">
+        An AI engine is already answering questions about your brand. You are
+        not in the room.
+      </h1>
+
+      <p class="mt-7 max-w-2xl text-[19px] text-white/75">
+        Most communities that decide those answers forbid vendors from speaking.
+        So we build the ground you own, speak only where you are allowed, and
+        correct facts where you are not.
+      </p>
+
+      <!-- ---------------------------------- scanner form -->
+      <div id="scanner" class="mt-12 max-w-2xl scroll-mt-24">
+        <form id="scan-form" novalidate class="flex flex-col gap-3">
+          <label class="eyebrow eyebrow-dark" for="scan-site">
+            Your website
+          </label>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <input
+              id="scan-site"
+              name="site"
+              type="text"
+              inputmode="url"
+              autocomplete="url"
+              spellcheck="false"
+              class="field field-dark sm:flex-1"
+              placeholder="yourcompany.com"
+              aria-describedby="scan-error"
+            />
+            <button type="submit" class="btn btn-mint shrink-0">
+              Find the threads
+            </button>
+          </div>
+
+          <label class="eyebrow eyebrow-dark mt-4" for="scan-what">
+            What do you sell? (optional, it sharpens the match)
+          </label>
+          <input
+            id="scan-what"
+            name="what"
+            type="text"
+            spellcheck="false"
+            class="field field-dark"
+            placeholder="payments api for platforms"
+          />
+
+          <p
+            id="scan-error"
+            role="alert"
+            class="hidden text-[14px] text-rust"
+            style="color: var(--rust);"
+          >
+          </p>
+
+          <p class="eyebrow eyebrow-dark mt-2">
+            This builds live Reddit searches. It does not send us your data.
+          </p>
+        </form>
+
+        <p
+          id="scan-status"
+          role="status"
+          aria-live="polite"
+          class="mt-6 hidden items-center gap-3 text-[15px] text-mint"
+        >
+          <span
+            class="inline-block h-2 w-2 rounded-full bg-mint"
+            style="animation: is-pulse 0.9s ease-in-out infinite;"></span>
+          <span id="scan-status-text">Building your searches</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ SCANNER OUTPUT -->
+  <Section id="results" tone="paper">
+    <SectionTitle
+      eyebrow="The scanner"
+      title="The threads are already there. The search is the point."
+      description="Type your domain and we assemble the exact Reddit searches a buyer would run about your category, plus the ones that show what is already being said about you. Every link opens a live search on reddit.com."
+    />
+
+    <div id="scan-empty" class="mt-12 border-t border-border-soft pt-8">
+      <p class="text-muted max-w-2xl">
+        Nothing scanned yet. Enter a domain above and the results land here.
+      </p>
+      <a href="#scanner" class="btn btn-ghost mt-6">Go to the scanner</a>
+    </div>
+
+    <div id="scan-results" class="mt-12 hidden">
+      <!-- summary -->
+      <div class="border-t border-border-soft pt-8">
+        <p class="eyebrow">Result</p>
+        <p id="scan-summary" class="mt-3 text-[17px] text-text"></p>
+        <p id="scan-topics" class="mt-2 text-[15px] text-muted"></p>
+      </div>
+
+      <!-- group 1 -->
+      <div class="mt-14">
+        <h3 class="display-3 text-ink">What Reddit already says about you</h3>
+        <p class="mt-3 max-w-2xl text-[16px] text-muted">
+          These open live searches for your brand name. Click any one to see the
+          current threads.
+        </p>
+        <ul id="scan-brand" class="mt-7 grid gap-3 sm:grid-cols-2"></ul>
+      </div>
+
+      <!-- group 2 -->
+      <div class="mt-14">
+        <h3 class="display-3 text-ink">
+          Openings in your buyers&rsquo; communities
+        </h3>
+        <p class="mt-3 max-w-2xl text-[16px] text-muted">
+          Searches for the questions people ask before they buy something like
+          yours. Each one runs live on Reddit when you click it.
+        </p>
+        <ul id="scan-openings" class="mt-7 grid gap-3 md:grid-cols-2"></ul>
+      </div>
+
+      <!-- honesty -->
+      <div class="mt-12 border-t border-border-soft pt-6">
+        <p id="scan-disclaimer" class="text-[14px] text-muted max-w-3xl"></p>
+      </div>
+
+      <!-- next step -->
+      <div
+        class="mt-10 rounded-card border border-border-soft bg-white p-8 md:p-10"
+      >
+        <p class="eyebrow">The paid first step</p>
+        <h3 class="display-3 mt-3 text-ink">
+          Knowing which of these matter is the actual work.
+        </h3>
+        <p class="mt-4 max-w-2xl text-[16px] text-muted">
+          A search list is free. An audit is not. We read the threads, check
+          what is already being said about you, check which rooms allow a vendor
+          to speak, and write down what to do in each one. That is the first
+          deliverable of the engagement.
+        </p>
+        <a id="scan-cta" href={getStartedUrl} class="btn btn-primary mt-7">
+          Get the audit
+        </a>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ============================================ HOW IT WORKS -->
+  <Section id="how-it-works" tone="ink">
+    <SectionTitle
+      tone="ink"
+      eyebrow="How it works"
+      title="Three rooms, two of which you own."
+      description="Every subreddit has a rule about vendors. We read it first and then act inside it. That is the whole method."
+    />
+
+    <div class="mt-14 grid gap-px border-t border-linedk md:grid-cols-3">
+      {
+        rooms.map((room) => (
+          <div class="border-t border-linedk pt-7 md:border-t-0 md:pt-0 md:pr-8">
+            <p class="eyebrow eyebrow-dark">{room.eyebrow}</p>
+            <h3 class="mt-3 font-display text-[22px] text-white">
+              {room.title}
+            </h3>
+            <p class="mt-3 text-[15px] text-white/70">{room.body}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-16 grid gap-10 border-t border-linedk pt-10 md:grid-cols-2">
+      {
+        owned.map((item) => (
+          <div>
+            <p class="eyebrow eyebrow-dark">{item.eyebrow}</p>
+            <h3 class="mt-3 font-display text-[22px] text-white">
+              {item.title}
+            </h3>
+            <p class="mt-3 text-[15px] text-white/70">{item.body}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-16 border-t border-linedk pt-10">
+      <p class="eyebrow eyebrow-dark">The shape of the engagement</p>
+      <dl class="mt-6">
+        {
+          mechanics.map((row) => (
+            <div class="grid gap-2 border-b border-linedk py-4 md:grid-cols-[200px_1fr] md:gap-8">
+              <dt class="eyebrow eyebrow-dark md:pt-1">{row.k}</dt>
+              <dd class="text-[15px] text-white/80">{row.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </Section>
+
+  <!-- ============================================ WHY REDDIT -->
+  <Section id="why-reddit" tone="paper">
+    <SectionTitle
+      eyebrow="Why Reddit"
+      title="Answer engines read forums. Forums are where people say what they really think."
+      description="When someone asks an AI assistant which tool to pick, the answer is assembled from pages that read like real people comparing real products. Reddit threads fit that shape better than a landing page does."
+    />
+
+    <div class="mt-14 grid gap-10 border-t border-border-soft pt-10 md:grid-cols-3">
+      <div>
+        <p class="eyebrow">Widely reported</p>
+        <h3 class="mt-3 font-display text-[21px] text-ink">
+          Reddit is cited heavily by AI answer engines
+        </h3>
+        <p class="mt-3 text-[15px] text-muted">
+          We are not going to quote you a percentage. The published figures move
+          and we cannot verify them. What is not in dispute is that forum
+          threads show up in cited sources again and again.
+        </p>
+      </div>
+      <div>
+        <p class="eyebrow">Why it holds</p>
+        <h3 class="mt-3 font-display text-[21px] text-ink">
+          A thread answers the question a buyer actually asked
+        </h3>
+        <p class="mt-3 text-[15px] text-muted">
+          Your pricing page says what you charge. A thread says whether it was
+          worth it. The second one is what gets summarised back to a buyer.
+        </p>
+      </div>
+      <div>
+        <p class="eyebrow">The gap</p>
+        <h3 class="mt-3 font-display text-[21px] text-ink">
+          Wrong facts about you persist for years
+        </h3>
+        <p class="mt-3 text-[15px] text-muted">
+          A comment from 2021 about a limit you removed still reads as current.
+          Correcting it is allowed almost everywhere. Almost nobody does it.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ============================================ LIMITS -->
+  <Section id="limits" tone="ink">
+    <SectionTitle
+      tone="ink"
+      eyebrow="Read this before you buy"
+      title="What we do not promise."
+      description="Naming the limits is what makes the rest credible. If any of these are dealbreakers, we are the wrong people."
+    />
+
+    <div class="mt-14 grid gap-px border-t border-linedk md:grid-cols-2">
+      {
+        notPromised.map((item) => (
+          <div class="border-b border-linedk py-7 md:pr-10">
+            <h3 class="font-display text-[20px] text-white">{item.title}</h3>
+            <p class="mt-3 text-[15px] text-white/70">{item.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- ============================================ FINAL CTA -->
+  <Section tone="paper">
+    <div class="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+      <div class="max-w-2xl">
+        <Logo size={34} tone="light" />
+        <h2 class="display-2 mt-6 text-ink">
+          Find out what is already being said. Then decide.
+        </h2>
+        <p class="mt-5 text-[17px] text-muted">
+          Start with a short call or start with the 90-day programme. Either
+          way, month to month. You keep the subreddits and the documentation.
+        </p>
+      </div>
+      <a href={getStartedUrl} class="btn btn-primary shrink-0">Get started</a>
+    </div>
+  </Section>
 </MainLayout>
+
+<style is:global>
+  @keyframes is-pulse {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>
+
+<script
+  is:inline
+  define:vars={{
+    IS_TOPICS: redditTargets.topics,
+    IS_NOTE: redditTargets.note,
+    IS_GET_STARTED: getStartedUrl,
+  }}
+>
+  (function () {
+    "use strict";
+
+    var REDDIT = "https://www.reddit.com";
+
+    var FALLBACK = {
+      id: "general",
+      label: "General B2B software buying",
+      subreddits: ["SaaS", "Entrepreneur", "startups", "smallbusiness"],
+      queries: [
+        "software recommendation",
+        "looking for an alternative to",
+        "what are you actually paying for",
+      ],
+    };
+
+    var form = document.getElementById("scan-form");
+    var siteInput = document.getElementById("scan-site");
+    var whatInput = document.getElementById("scan-what");
+    var errorEl = document.getElementById("scan-error");
+    var statusEl = document.getElementById("scan-status");
+    var emptyEl = document.getElementById("scan-empty");
+    var resultsEl = document.getElementById("scan-results");
+    var summaryEl = document.getElementById("scan-summary");
+    var topicsEl = document.getElementById("scan-topics");
+    var brandEl = document.getElementById("scan-brand");
+    var openingsEl = document.getElementById("scan-openings");
+    var disclaimerEl = document.getElementById("scan-disclaimer");
+    var ctaEl = document.getElementById("scan-cta");
+
+    if (!form) return;
+
+    /* ---------------------------------------- domain handling */
+
+    var DOMAIN_RE =
+      /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/;
+
+    function normaliseDomain(raw) {
+      var v = String(raw || "")
+        .trim()
+        .toLowerCase();
+      if (!v) return null;
+      v = v.replace(/^[a-z][a-z0-9+.-]*:\/\//, ""); // protocol
+      v = v.replace(/^[^@/]*@/, ""); // stray user info
+      v = v.split(/[/?#]/)[0]; // path, query, hash
+      v = v.split(":")[0]; // port
+      v = v.replace(/^www\./, "");
+      v = v.replace(/\.$/, "");
+      if (!v || v.length > 253) return null;
+      if (!DOMAIN_RE.test(v)) return null;
+      return v;
+    }
+
+    function brandToken(domain) {
+      var first = domain.split(".")[0];
+      return first.replace(/[^a-z0-9]+/g, " ").trim() || domain;
+    }
+
+    /* ---------------------------------------- matching */
+
+    function haystackFor(domain, what) {
+      var labels = domain.split(".").slice(0, -1).join(" ");
+      return (labels + " " + String(what || ""))
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    }
+
+    function scoreTopic(topic, hay, whatText) {
+      var score = 0;
+      var hits = 0;
+      var i;
+      for (i = 0; i < topic.keywords.length; i++) {
+        var kw = topic.keywords[i];
+        if (hay.indexOf(kw) !== -1) {
+          hits++;
+          // A keyword the user typed themselves is a stronger signal than one
+          // that happens to sit inside the domain name.
+          score += whatText && whatText.indexOf(kw) !== -1 ? 3 : 1;
+          if (kw.indexOf(" ") !== -1) score += 1; // multi-word match is specific
+        }
+      }
+      return hits === 0 ? 0 : score;
+    }
+
+    function matchTopics(domain, what) {
+      var whatText = String(what || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+      var hay = haystackFor(domain, what);
+      var scored = [];
+      for (var i = 0; i < IS_TOPICS.length; i++) {
+        var s = scoreTopic(IS_TOPICS[i], hay, whatText);
+        if (s > 0) scored.push({ topic: IS_TOPICS[i], score: s });
+      }
+      scored.sort(function (a, b) {
+        return b.score - a.score;
+      });
+      var picked = scored.slice(0, 3).map(function (x) {
+        return x.topic;
+      });
+      return { topics: picked, confident: picked.length > 0 };
+    }
+
+    /* ---------------------------------------- link builders */
+
+    function siteWideSearch(q, sort, t) {
+      var url = REDDIT + "/search/?q=" + encodeURIComponent(q) + "&sort=" + sort;
+      if (t) url += "&t=" + t;
+      return url;
+    }
+
+    function subredditSearch(sub, q) {
+      return (
+        REDDIT +
+        "/r/" +
+        encodeURIComponent(sub) +
+        "/search/?q=" +
+        encodeURIComponent(q) +
+        "&restrict_sr=1&sort=top&t=year"
+      );
+    }
+
+    function brandLinks(brand) {
+      var quoted = '"' + brand + '"';
+      return [
+        {
+          label: "Newest mentions of " + brand,
+          url: siteWideSearch(quoted, "new"),
+          note: "Everything posted recently that names you, newest first.",
+        },
+        {
+          label: "Most discussed mentions of " + brand,
+          url: siteWideSearch(quoted, "top", "year"),
+          note: "The threads from the past year that people actually engaged with.",
+        },
+        {
+          label: brand + " alternative",
+          url: siteWideSearch(brand + " alternative", "top", "year"),
+          note: "People looking to replace you, or to replace someone with you.",
+        },
+        {
+          label: brand + " vs",
+          url: siteWideSearch(brand + " vs", "top", "year"),
+          note: "Head to head comparisons. This is where wrong facts live longest.",
+        },
+        {
+          label: brand + " review",
+          url: siteWideSearch(brand + " review", "top", "year"),
+          note: "First hand accounts of using the product.",
+        },
+      ];
+    }
+
+    function openingLinks(topics) {
+      var out = [];
+      for (var i = 0; i < topics.length; i++) {
+        var topic = topics[i];
+        var subs = (topic.subreddits || []).slice(0, 2);
+        var queries = (topic.queries || []).slice(0, 2);
+        for (var s = 0; s < subs.length; s++) {
+          for (var q = 0; q < queries.length; q++) {
+            out.push({
+              sub: "r/" + subs[s],
+              topic: topic.label,
+              label: queries[q],
+              url: subredditSearch(subs[s], queries[q]),
+              note:
+                "Live search inside r/" +
+                subs[s] +
+                ". Top posts of the past year.",
+            });
+          }
+        }
+        if (topic.queries && topic.queries.length) {
+          out.push({
+            sub: "All of Reddit",
+            topic: topic.label,
+            label: topic.queries[0],
+            url: siteWideSearch(topic.queries[0], "top", "year"),
+            note: "Same question, searched across every subreddit.",
+          });
+        }
+      }
+      return out.slice(0, 18);
+    }
+
+    /* ---------------------------------------- rendering */
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined && text !== null) n.textContent = text;
+      return n;
+    }
+
+    function renderBrand(items) {
+      brandEl.innerHTML = "";
+      items.forEach(function (item) {
+        var li = el(
+          "li",
+          "rounded-card border border-border-soft bg-white p-5",
+        );
+        var a = el("a", "font-display text-[18px] text-ink hover:text-brand underline decoration-border-soft underline-offset-4", item.label);
+        a.href = item.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        li.appendChild(a);
+        li.appendChild(el("p", "mt-2 text-[14px] text-muted", item.note));
+        brandEl.appendChild(li);
+      });
+    }
+
+    function renderOpenings(items) {
+      openingsEl.innerHTML = "";
+      items.forEach(function (item) {
+        var li = el(
+          "li",
+          "rounded-card border border-border-soft bg-white p-5",
+        );
+        var head = el("div", "flex flex-wrap items-center gap-2");
+        head.appendChild(el("span", "pill pill-light !h-7 !px-3 !text-[12px]", item.sub));
+        head.appendChild(el("span", "eyebrow", item.topic));
+        li.appendChild(head);
+
+        var a = el("a", "mt-3 block font-display text-[18px] text-ink hover:text-brand underline decoration-border-soft underline-offset-4", item.label);
+        a.href = item.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        li.appendChild(a);
+        li.appendChild(el("p", "mt-2 text-[14px] text-muted", item.note));
+        openingsEl.appendChild(li);
+      });
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.classList.remove("hidden");
+      siteInput.setAttribute("aria-invalid", "true");
+    }
+
+    function clearError() {
+      errorEl.textContent = "";
+      errorEl.classList.add("hidden");
+      siteInput.removeAttribute("aria-invalid");
+    }
+
+    /* ---------------------------------------- submit */
+
+    function run(domain, what) {
+      var brand = brandToken(domain);
+      var match = matchTopics(domain, what);
+      var topics = match.confident ? match.topics : [FALLBACK];
+
+      var brandItems = brandLinks(brand);
+      var openingItems = openingLinks(topics);
+      var total = brandItems.length + openingItems.length;
+
+      renderBrand(brandItems);
+      renderOpenings(openingItems);
+
+      summaryEl.textContent =
+        total +
+        " live Reddit searches ready for " +
+        domain +
+        ". None of them have been run yet. Click one and it runs on Reddit.";
+
+      var labels = topics
+        .map(function (t) {
+          return t.label;
+        })
+        .join(", ");
+
+      topicsEl.textContent = match.confident
+        ? "Matched topics: " + labels + "."
+        : "We could not match your domain to a category with any confidence, so these are the broad B2B software rooms instead: " +
+          labels +
+          ". Add a line about what you sell and the match gets better.";
+
+      disclaimerEl.textContent =
+        IS_NOTE ||
+        "These links run as fresh searches on reddit.com when you click them.";
+
+      ctaEl.href = IS_GET_STARTED + "?site=" + encodeURIComponent(domain);
+
+      emptyEl.classList.add("hidden");
+      resultsEl.classList.remove("hidden");
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearError();
+
+      var raw = siteInput.value;
+      if (!String(raw).trim()) {
+        showError("Enter your website address first. For example: yourcompany.com");
+        siteInput.focus();
+        return;
+      }
+
+      var domain = normaliseDomain(raw);
+      if (!domain) {
+        showError(
+          "That does not look like a website address. Try something like yourcompany.com",
+        );
+        siteInput.focus();
+        return;
+      }
+
+      var what = whatInput ? whatInput.value : "";
+
+      // Short transition only. Nothing is being fetched.
+      statusEl.classList.remove("hidden");
+      statusEl.classList.add("flex");
+
+      window.setTimeout(function () {
+        statusEl.classList.add("hidden");
+        statusEl.classList.remove("flex");
+        run(domain, what);
+        var anchor = document.getElementById("results");
+        if (anchor && anchor.scrollIntoView) {
+          anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 420);
+    });
+
+    siteInput.addEventListener("input", clearError);
+  })();
+</script>

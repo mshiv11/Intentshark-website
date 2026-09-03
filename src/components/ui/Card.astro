@@ -1,15 +1,25 @@
 ---
-const { isUnderline } = Astro.props;
+interface Props {
+  tone?: "paper" | "ink";
+  /** Draw the hairline border. Off gives a bare block for column layouts. */
+  bordered?: boolean;
+  class?: string;
+}
+
+const {
+  tone = "paper",
+  bordered = true,
+  class: className = "",
+} = Astro.props;
+
+const base = tone === "ink" ? "bg-carddk text-white" : "bg-white text-text";
+const line = bordered
+  ? tone === "ink"
+    ? "border border-linedk"
+    : "border border-border-soft"
+  : "";
 ---
 
-{
-  isUnderline ? (
-    <div class="rounded-[45px] border border-dark shadow-[0px_5px_0px_#191a23]">
-      <slot />
-    </div>
-  ) : (
-    <div class="rounded-[45px]">
-      <slot />
-    </div>
-  )
-}
+<div class={`rounded-card ${base} ${line} ${className}`}>
+  <slot />
+</div>
